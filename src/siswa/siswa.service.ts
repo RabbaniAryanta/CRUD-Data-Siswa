@@ -21,7 +21,7 @@ export class siswaService {
 
     findOne(nisn: string) {
         const siswa = this.siswa.find((item) => item.nisn == nisn);
-        if (!siswa) throw new NotFoundException(`Todo dengan ID ${nisn} tidak ditemukan`);
+        if (!siswa) throw new NotFoundException(`Siswa dengan NISN ${nisn} tidak ditemukan`);
         return siswa;
     }
 
@@ -38,7 +38,7 @@ export class siswaService {
 
     remove(nisn: string) {
         const index = this.siswa.findIndex((item) => item.nisn === nisn);
-        if (index === -1) throw new NotFoundException(`Todo dengan ID ${nisn} tidak ditemukan`);
+        if (index === -1) throw new NotFoundException(`Siswa dengan NISN ${nisn} tidak ditemukan`);
         this.siswa.splice(index, 1);
     }
 }
