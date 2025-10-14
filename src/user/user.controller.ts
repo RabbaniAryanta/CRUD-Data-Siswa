@@ -7,21 +7,35 @@ import {
   Put,
   Delete,
   Query,
+  Body,
 } from '@nestjs/common';
 import type { Request } from 'express';
 import { UserService } from './user.service';
+import { createUserDto } from './dto/createUser.dto';
 
 @Controller('user')
 export class UserController {
-  constructor(private UserService: UserService) {}
-  @Get('all')
-  findAll(@Req() request: Request) {
-    return this.UserService.findAll();
+  constructor(private UserService: UserService) { }
+  @Get()
+  findAll() {
+    const user = this.UserService.findall()
+    return {
+      status: 200,
+      success: true,
+      message: 'data user',
+      data: user
+
+    }
   }
 
   @Post()
-  create(): string {
-    return 'This action adds a new user';
+  create(@Body()data : createUserDto) {
+    return {
+      status: 200,
+      success: true,
+      message: 'data user telah berhasil dibuat',
+      data : data
+    } 
   }
 
   @Put(':id')
