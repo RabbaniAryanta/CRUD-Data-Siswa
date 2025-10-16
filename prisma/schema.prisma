@@ -28,20 +28,26 @@ model Transaction {
   DetailTransaction DetailTransaction[]
 }
 
+enum payment_method {
+  Cash
+  Qris
+}
+
 model User {
-  id           Int            @id @default(autoincrement())
+  id           Int           @id @default(autoincrement())
   name         String
   email        String
   password     String
   role         String
+  createdAt    DateTime?     @default(now())
   transactions Transaction[]
 }
 
 model DetailTransaction {
-  id            Int          @id @default(autoincrement())
+  id            Int         @id @default(autoincrement())
   transaction   Transaction @relation(fields: [transactionId], references: [id])
   transactionId Int
-  menu          Menu         @relation(fields: [menuId], references: [id])
+  menu          Menu        @relation(fields: [menuId], references: [id])
   menuId        Int
   quantity      Int
   unit_price    Float
