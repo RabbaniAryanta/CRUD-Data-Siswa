@@ -5,6 +5,7 @@ import {
   Param,
   Post,
   Put,
+  Patch,
   Delete,
   Query,
   Body,
@@ -12,6 +13,7 @@ import {
 import type { Request } from 'express';
 import { UserService } from './user.service';
 import { createUserDto } from './dto/createUser.dto';
+import { updateUserDto } from './dto/updateUser.dto';
 import { resolve } from 'path';
 
 @Controller('user')
@@ -24,7 +26,7 @@ export class UserController {
       return {
         status: 200,
         success: true,
-        message: "User daa found successfully",
+        message: "User data found successfully",
         data: user
       };
     } catch (error) {
@@ -58,8 +60,43 @@ export class UserController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string): string {
-    return `This action updates a #${id} user`;
+  async update(@Param('id') id: string, @Body() data: updateUserDto) {
+    try {
+      const result = await this.UserService.update(+id, data);
+      return {
+        status: 200,
+        success: true,
+        message: 'User updated successfully',
+        data: result
+      };
+    } catch (error) {
+      return {
+        status: 500,
+        success: false,
+        message: 'Internal server error',
+        data: error.message
+      };
+    }
+  }
+
+  @Patch(':id')
+  async partialUpdate(@Param('id') id: string, @Body() data: updateUserDto) {
+    try {
+      const result = await this.UserService.update(+id, data);
+      return {
+        status: 200,
+        success: true,
+        message: 'User updated successfully',
+        data: result
+      };
+    } catch (error) {
+      return {
+        status: 500,
+        success: false,
+        message: 'Internal server error',
+        data: error.message
+      };
+    }
   }
 
   @Get(':id')
@@ -97,7 +134,30 @@ export class UserController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): string {
-    return `This action removes a #${id} user`;
+  async remove(@Param('id') id: string) {
+    try {
+      const result = await this.UserService.delete(+id);
+      return {
+        status: 200,
+        success: true,
+        message: 'User deleted successfully',
+        data: result
+      };
+    } catch (error) {
+      if (error.message.includes('No record was found for a delete')) {
+        return {
+          status: 404,
+          success: false,
+          message: 'User not found',
+          data: null
+        };
+      }
+      return {
+        status: 500,
+        success: false,
+        message: 'Internal server error',
+        data: error.message
+      };
+    }
   }
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from 'prisma/prisma.service';
 import { createUserDto } from './dto/createUser.dto';
+import { updateUserDto } from './dto/updateUser.dto';
 
 @Injectable()
 export class UserService {
@@ -33,12 +34,24 @@ export class UserService {
     }
   }
 
-  update(id: number, user: createUserDto) {
-    return this.prisma.user.update({ data: user, where: { id: id } });
+  async update(id: number, user: updateUserDto) {
+    try {
+      const updatedUser = await this.prisma.user.update({
+        data: user,
+        where: { id: id },
+      });
+      return updatedUser;
+    } catch (error) {
+      throw new Error(`Failed to update user: ${error.message}`);
+    }
   }
 
 
-  delete(id: number) {
-    return this.prisma.user.delete({ where: { id: id } });
+  async delete(id: number) {
+    try {
+      return await this.prisma.user.delete({ where: { id: id } });
+    } catch (error) {
+      throw new Error(`Failed to delete user: ${error.message}`);
+    }
   }
 }
