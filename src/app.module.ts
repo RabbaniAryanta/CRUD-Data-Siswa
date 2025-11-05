@@ -7,11 +7,10 @@ import { TodosModule } from './todos/todos.module';
 import { siswaModule } from './siswa/siswa.module';
 
 import { PrismaModule } from 'prisma/prisma.module';
-
-
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [ PrismaModule, TodosModule, siswaModule],
+  imports: [PrismaModule, TodosModule, siswaModule, AuthModule],
   controllers: [AppController, UserController],
   providers: [AppService, UserService],
 })

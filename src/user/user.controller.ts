@@ -15,26 +15,28 @@ import { UserService } from './user.service';
 import { createUserDto } from './dto/createUser.dto';
 import { updateUserDto } from './dto/updateUser.dto';
 import { resolve } from 'path';
+import * as bcrypt from 'bcryptjs';
 
 @Controller('user')
 export class UserController {
-  constructor(private UserService: UserService) { }
+  constructor(private UserService: UserService) {}
   @Get()
   async findAll() {
     try {
       const user = await this.UserService.findall();
+
       return {
         status: 200,
         success: true,
-        message: "User data found successfully",
-        data: user
+        message: 'User data found successfully',
+        data: user,
       };
     } catch (error) {
       return {
         status: 400,
         success: false,
         message: `error when get user: ${error}`,
-        data: null
+        data: null,
       };
     }
   }
@@ -47,14 +49,14 @@ export class UserController {
         status: 200,
         success: true,
         message: 'User created successfully',
-        data: result
+        data: result,
       };
     } catch (error) {
       return {
         status: 500,
         success: false,
         message: 'Internal server error',
-        data: error.message
+        data: error.message,
       };
     }
   }
@@ -67,14 +69,14 @@ export class UserController {
         status: 200,
         success: true,
         message: 'User updated successfully',
-        data: result
+        data: result,
       };
     } catch (error) {
       return {
         status: 500,
         success: false,
         message: 'Internal server error',
-        data: error.message
+        data: error.message,
       };
     }
   }
@@ -87,14 +89,14 @@ export class UserController {
         status: 200,
         success: true,
         message: 'User updated successfully',
-        data: result
+        data: result,
       };
     } catch (error) {
       return {
         status: 500,
         success: false,
         message: 'Internal server error',
-        data: error.message
+        data: error.message,
       };
     }
   }
@@ -103,19 +105,20 @@ export class UserController {
   async findOne(@Param('id') id: string) {
     try {
       const user = await this.UserService.findOne(+id);
+
       if (user) {
         return {
           status: 200,
           success: true,
           message: `User found with name ${user.name}`,
-          data: user
+          data: user,
         };
       } else {
         return {
           status: 404,
           success: false,
           message: 'User not found',
-          data: null
+          data: null,
         };
       }
     } catch (error) {
@@ -123,14 +126,9 @@ export class UserController {
         status: 500,
         success: false,
         message: 'Internal server error',
-        data: error.message
+        data: error.message,
       };
     }
-  }
-
-  @Get('search')
-  find(@Query('breed') breed: string, @Query('age') age: number): string {
-    return `This action returns user filtered by age: ${age} and breed ${breed}`;
   }
 
   @Delete(':id')
@@ -141,7 +139,7 @@ export class UserController {
         status: 200,
         success: true,
         message: 'User deleted successfully',
-        data: result
+        data: result,
       };
     } catch (error) {
       if (error.message.includes('No record was found for a delete')) {
@@ -149,14 +147,14 @@ export class UserController {
           status: 404,
           success: false,
           message: 'User not found',
-          data: null
+          data: null,
         };
       }
       return {
         status: 500,
         success: false,
         message: 'Internal server error',
-        data: error.message
+        data: error.message,
       };
     }
   }
