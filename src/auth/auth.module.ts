@@ -9,11 +9,18 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [PrismaModule, BcryptService, ConfigModule, PassportModule, JwtModule.register({
-    secret: process.env.JWT_SECRET || 'BambangHartono',
-    signOptions: { expiresIn: '1h' },
-  })],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, BcryptService, JwtStrategy],
+  imports: [
+    PrismaModule,
+    ConfigModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JwtModule.register({
+      secret: process.env.JWT_SECRET || 'secret-word',
+      signOptions: { expiresIn: Number(process.env.JWT_EXPIRES_IN) ?? 1440,
+      }
+    })
+  ],
 })
-export class AuthModule {}
+
+export class AuthModule { }
