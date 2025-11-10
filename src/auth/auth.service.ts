@@ -56,39 +56,4 @@ export class AuthService {
         };
       }
     }
-
-    // ---- Added CRUD methods expected by controller ----
-    async create(createAuthDto: any): Promise<any> {
-      const hashed = await this.bcryptService.hashPassword(createAuthDto.password);
-      return this.prisma.user.create({
-        data: {
-          ...createAuthDto,
-          password: hashed,
-        },
-      });
-    }
-
-    async findAll(): Promise<any[]> {
-      return this.prisma.user.findMany();
-    }
-
-    async findOne(id: number): Promise<any> {
-      return this.prisma.user.findUnique({ where: { id } });
-    }
-
-    async update(id: number, updateAuthDto: any): Promise<any> {
-      const data: any = { ...updateAuthDto };
-      if (updateAuthDto.password) {
-        data.password = await this.bcryptService.hashPassword(updateAuthDto.password);
-      }
-      return this.prisma.user.update({
-        where: { id },
-        data,
-      });
-    }
-
-    async remove(id: number): Promise<any> {
-      return this.prisma.user.delete({ where: { id } });
-    }
-}
-        
+  }

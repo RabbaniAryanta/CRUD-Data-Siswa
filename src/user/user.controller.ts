@@ -9,6 +9,7 @@ import {
   Delete,
   Query,
   Body,
+  UseGuards,
 } from '@nestjs/common';
 import type { Request } from 'express';
 import { UserService } from './user.service';
@@ -16,11 +17,15 @@ import { createUserDto } from './dto/createUser.dto';
 import { updateUserDto } from './dto/updateUser.dto';
 import { resolve } from 'path';
 import * as bcrypt from 'bcryptjs';
+import { RoleGuard, Role } from 'src/helper/role-guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('user')
 export class UserController {
   constructor(private UserService: UserService) {}
   @Get()
+  @UseGuards(AuthGuard('jwt'), RoleGuard)
+  @Role('ADMIN')
   async findAll() {
     try {
       const user = await this.UserService.findall();
