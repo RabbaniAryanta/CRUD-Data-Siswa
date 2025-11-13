@@ -15,17 +15,14 @@ datasource db {
 
 model Transaction {
   id                Int                 @id @default(autoincrement())
+  total             Float
+  payment_method    payment_method      @default(Qris)
+  orderName         String              @default("")
+  created_At        DateTime            @default(now())
+  updated_At        DateTime            @updatedAt
   user              User                @relation(fields: [user_id], references: [id])
   user_id           Int
-  subtotal          Float
-  tax               Float
-  discount          Float
-  total             Float
-  payment_method    String
-  status            String
-  created_At        DateTime            @default(now())
-  pay_at            DateTime
-  DetailTransaction DetailTransaction[]
+  detail DetailTransaction[]
 }
 
 enum payment_method {
@@ -57,11 +54,14 @@ model User {
 
 model DetailTransaction {
   id            Int         @id @default(autoincrement())
-  transaction   Transaction @relation(fields: [transactionId], references: [id])
-  transactionId Int
+  quantity      Int
+  purchase_price Int
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
   menu          Menu        @relation(fields: [menuId], references: [id])
   menuId        Int
-  quantity      Int
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  transactionId Int
   unit_price    Float
   subtotal      Float
 }
